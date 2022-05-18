@@ -12,7 +12,7 @@ const AvailableMeals = () => {
     useEffect(() => {
         const fetchMeals = async () => {
             setIsLoading(true);
-            const response = await fetch(process.env.REACT_APP_FIREBASE + 'bla');
+            const response = await fetch(process.env.REACT_APP_FIREBASE);
             if (!response.ok) {
                 throw new Error('something went wrong...');
             }
@@ -32,19 +32,6 @@ const AvailableMeals = () => {
             setIsLoading(false);
             setHttpError(null);
         }
-        // what happens here
-        // Uncaught (in promise) Error: something went wrong... at fetchMeals (AvailableMeals.js:17:1)
-        // why
-        // because fetch meals is an async function
-        // when error is thrown
-        // the async function rejects it 
-        // to capture the error, you need to await it
-        // but that is not possible because it would require us to alter the signature of our useEffect function
-        // which is not allowed
-        // useEffect fuctions cannot return a promise
-        // you can hover over and check it
-        // if you still want to go with try catch approach, you will have to wrap this in another function and call it
-
         const fetchMealsAsyncWrapper = async () => {
             try {
                 await fetchMeals();
@@ -54,10 +41,7 @@ const AvailableMeals = () => {
                 setHttpError(error.message);
             }
         }
-
         fetchMealsAsyncWrapper();
-
-
     }, []);
     const mealsList = meals.map(meal => (
         <MealItem
