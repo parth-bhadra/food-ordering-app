@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Card from '../UI/Card';
 import classes from './AvailableMeals.module.css';
 import MealItem from './MealItem/MealItem';
 import 'dotenv/config';
-const DUMMY_MEALS = [
+/* const DUMMY_MEALS = [
     {
         id: 'm1',
         name: 'Sushi',
@@ -28,14 +28,39 @@ const DUMMY_MEALS = [
         description: 'Healthy...and green...',
         price: 18.99,
     },
-];
+]; */
 
 const AvailableMeals = () => {
-    console.log(process.env);
+    const [meals, setMeals] = useState([]);
+    // console.log(process.env);
     useEffect(() => {
-        fetch(process.env.REACT_APP_FIREBASE);
+        const fetchMeals = async () => {
+            const response = await fetch(process.env.REACT_APP_FIREBASE);
+            const responseData = await response.json();
+            // console.log(responseData);
+            const loadedMeals = [];
+
+            for (const key in responseData){
+                loadedMeals.push({
+                    id: key,
+                    key: key,
+                    name: responseData[key].name,
+                    description: responseData[key].description,
+                    price: responseData[key].price
+                })
+            }
+
+            // console.log(loadedMeals);
+            // once you have this data
+            // you would like your component to be re evaluated
+            // and for the same, you will manage a state
+            setMeals(loadedMeals);
+
+        }
+        fetchMeals();
+        
     }, []);
-    const mealsList = DUMMY_MEALS.map(meal => (
+    const mealsList = meals.map(meal => (
         <MealItem
             id={meal.id}
             key={meal.id}
