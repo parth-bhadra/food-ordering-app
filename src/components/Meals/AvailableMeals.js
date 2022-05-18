@@ -1,7 +1,8 @@
+import { useEffect } from 'react';
 import Card from '../UI/Card';
 import classes from './AvailableMeals.module.css';
 import MealItem from './MealItem/MealItem';
-
+import 'dotenv/config';
 const DUMMY_MEALS = [
     {
         id: 'm1',
@@ -30,6 +31,10 @@ const DUMMY_MEALS = [
 ];
 
 const AvailableMeals = () => {
+    console.log(process.env);
+    useEffect(() => {
+        fetch(process.env.REACT_APP_FIREBASE);
+    }, []);
     const mealsList = DUMMY_MEALS.map(meal => (
         <MealItem
             id={meal.id}
