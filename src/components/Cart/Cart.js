@@ -40,11 +40,24 @@ const Cart = (props) => {
         setIsCheckout(false);
     }
 
+    const submitOrderHandler = (userData) => {
+        // send the data to backend from here
+        fetch(process.env.REACT_APP_FIREBASE + 'orders.json', {
+            method: 'POST',
+            body: JSON.stringify({
+                user: userData,
+                orderedItems: cartCtx.items
+            })
+        })
+    }
+
     const modalActions =
         <div className={classes.actions}>
             <button className={classes['button--alt']} onClick={props.onClose}>Close</button>
             {hasItems && <button className={classes.button} onClick={onClickOrderHandler}>Order</button>}
-        </div>
+        </div>;
+
+
     return (
         <Modal onClick={props.onClose}>
             <ul className={classes['cart-items']}>{cartItems}</ul>
@@ -52,7 +65,7 @@ const Cart = (props) => {
                 <span>Total Amount</span>
                 <span>{totalAmount}</span>
             </div>
-            {isCheckout && <Checkout onCancel={onCancelCheckoutHandler} />}
+            {isCheckout && <Checkout onSubmit={submitOrderHandler} onCancel={onCancelCheckoutHandler} />}
             {!isCheckout && modalActions}
         </Modal>
 
